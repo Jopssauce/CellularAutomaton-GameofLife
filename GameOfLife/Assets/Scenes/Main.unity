@@ -159,7 +159,7 @@ MonoBehaviour:
     m_Bits: 0
   m_worldSize: {x: 100, y: 0, z: 50}
   m_radius: 0.5
-  randomFrequency: 60
+  randomFrequency: 1
 --- !u!114 &1518016224
 MonoBehaviour:
   m_ObjectHideFlags: 0

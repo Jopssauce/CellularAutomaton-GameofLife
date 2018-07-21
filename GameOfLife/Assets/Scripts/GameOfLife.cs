@@ -35,11 +35,12 @@ public class GameOfLife : MonoBehaviour
                         cell.isAlive = false;
                     if (cell.isAlive && neighbors.Count == 3 || neighbors.Count == 2)
                         cell.isAlive = true;
-                    if (cell.isAlive && neighbors.Count > 3)
+                    if (cell.isAlive && neighbors.Count > 1)
                         cell.isAlive = false;
                     if (cell.isAlive == false && neighbors.Count == 3)
                         cell.isAlive = true;
-
+                    if (cell.m_gridX == m_grid.m_sizeX || cell.m_gridZ == m_grid.m_sizeZ)
+                        cell.isAlive = false;
                     neighbors.Clear();
                 }
                 //yield return new WaitForSeconds(m_gameSpeed);

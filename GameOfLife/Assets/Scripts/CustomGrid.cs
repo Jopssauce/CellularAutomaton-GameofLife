@@ -41,19 +41,22 @@ public class CustomGrid : MonoBehaviour
             {
                 //Populates grid from bottom left corner
                 Vector3 worldPoint = bottomLeftCorner + Vector3.right * (x * m_nodeDiameter + m_radius) + Vector3.forward * (z * m_nodeDiameter + m_radius);
-                grid[x, z] = new Cell(true, worldPoint, x, z);
+                grid[x, z] = new Cell(false, worldPoint, x, z);
             }
         }
-        //SetRandomAliveCells();
+        SetRandomAliveCells();
     }
 
     void SetRandomAliveCells()
     {
-        for (int i = 0; i < randomFrequency; i++)
+        for (int x = 0; x < m_sizeX; x++)
         {
-            int randX = Random.Range(0, m_sizeX);
-            int randZ = Random.Range(0, m_sizeZ);
-            grid[randX, randZ].isAlive = true;
+            for (int z = 0; z < m_sizeZ; z++)
+            {
+                int randX = Random.Range(0, m_sizeX);
+                int randZ = Random.Range(0, m_sizeZ);
+                grid[randX, randZ].isAlive = true;
+            }
         }
     }
 
