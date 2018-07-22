@@ -53,7 +53,7 @@ public class CustomGrid : MonoBehaviour
                 //Populates grid from bottom left corner
                 Vector3 worldPoint = bottomLeftCorner + Vector3.right * (x * m_nodeDiameter + m_radius) + Vector3.forward * (z * m_nodeDiameter + m_radius);
                 GameObject temp = Instantiate(cube, worldPoint, cube.transform.rotation);
-                temp.transform.localScale = new Vector3(m_nodeDiameter, 1, m_nodeDiameter);
+                temp.transform.localScale = new Vector3(m_nodeDiameter - 0.1f, 0.1f, m_nodeDiameter - 0.1f);
                 cubes[x, z] = temp;
                 grid[x, z] = new Cell(false, worldPoint, x, z);
             }
