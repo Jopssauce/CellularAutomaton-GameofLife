@@ -33,11 +33,7 @@ public class GameOfLife : MonoBehaviour
                 {
                     neighbors = GetNeighbors(cell);
 
-                    if (cell.isAlive && neighbors.Count < 2)
-                        cell.isAlive = false;
-                    if (cell.isAlive && neighbors.Count == 3 || neighbors.Count == 2)
-                        cell.isAlive = true;
-                    if (cell.isAlive && neighbors.Count > 3)
+                    if (cell.isAlive && (neighbors.Count < 2 || neighbors.Count > 3) )
                         cell.isAlive = false;
                     if (cell.isAlive == false && neighbors.Count == 3)
                         cell.isAlive = true;

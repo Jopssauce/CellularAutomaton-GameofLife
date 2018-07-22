@@ -227,6 +227,7 @@ MonoBehaviour:
   m_worldSize: {x: 50, y: 0, z: 50}
   m_radius: 0.5
   randomFrequency: 1
+  simulate: 1
 --- !u!114 &1518016224
 MonoBehaviour:
   m_ObjectHideFlags: 0
