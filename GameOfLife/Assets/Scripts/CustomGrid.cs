@@ -36,7 +36,7 @@ public class CustomGrid : MonoBehaviour
     {
         foreach (Cell node in grid)
         {
-            cubes[node.m_gridX, node.m_gridZ].GetComponent<Renderer>().material.color = (node.isAlive) ? Color.white : Color.black;;
+            cubes[node.m_gridX, node.m_gridZ].GetComponent<Renderer>().material.color = (node.isAlive) ? Color.white : Color.black;
         }
     }
 
@@ -58,19 +58,16 @@ public class CustomGrid : MonoBehaviour
                 grid[x, z] = new Cell(false, worldPoint, x, z);
             }
         }
-        SetRandomAliveCells();
+        //SetRandomAliveCells();
     }
 
     void SetRandomAliveCells()
     {
-        for (int x = 0; x < m_sizeX; x++)
+        for (int i = 0; i < m_sizeX * m_sizeZ; i++)
         {
-            for (int z = 0; z < m_sizeZ; z++)
-            {
-                int randX = Random.Range(0, m_sizeX);
-                int randZ = Random.Range(0, m_sizeZ);
-                grid[randX, randZ].isAlive = true;
-            }
+            int randX = Random.Range(0, m_sizeX);
+            int randZ = Random.Range(0, m_sizeZ);
+            grid[randX, randZ].isAlive = true;
         }
     }
 
@@ -81,6 +78,12 @@ public class CustomGrid : MonoBehaviour
         int x = Mathf.RoundToInt((m_sizeX - 1) * percentX);
         int z = Mathf.RoundToInt((m_sizeZ - 1) * percentZ);
         return grid[x, z];
+    }
+
+    public void ToggleNodeFromWorldPos(Vector3 pos)
+    {
+        Cell cell = GetNodeFromWorldPos(pos);
+        cell.isAlive = !cell.isAlive;
     }
 
     public bool IsNodeInsideGrid(int x, int z)

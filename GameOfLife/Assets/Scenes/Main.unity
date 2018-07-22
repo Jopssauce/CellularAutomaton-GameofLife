@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 1518016222}
   - component: {fileID: 1518016223}
   - component: {fileID: 1518016224}
+  - component: {fileID: 1518016225}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -223,7 +224,7 @@ MonoBehaviour:
   m_unwalkableMask:
     serializedVersion: 2
     m_Bits: 0
-  m_worldSize: {x: 100, y: 0, z: 50}
+  m_worldSize: {x: 50, y: 0, z: 50}
   m_radius: 0.5
   randomFrequency: 1
 --- !u!114 &1518016224
@@ -239,6 +240,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_gameSpeed: 0
   m_grid: {fileID: 1518016223}
+--- !u!114 &1518016225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1518016221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d3b70ce7914b1449cb3eaea893a1f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2082392901
 GameObject:
   m_ObjectHideFlags: 0
