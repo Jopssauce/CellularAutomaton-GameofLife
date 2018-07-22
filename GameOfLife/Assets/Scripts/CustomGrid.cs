@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class CustomGrid : MonoBehaviour
 {
+    public GameObject cube;
     public LayerMask m_unwalkableMask;
     public Vector3 m_worldSize;
     public float m_radius;
     public int randomFrequency = 10;
     Vector3 bottomLeftCorner;
     public Cell[,] grid { get; private set; }
+    public GameObject[,] cubes { get; private set; }
 
     //Node Size
     float m_nodeDiameter;
@@ -30,10 +32,19 @@ public class CustomGrid : MonoBehaviour
         CreateGrid();
     }
 
+    void Update()
+    {
+        foreach (Cell node in grid)
+        {
+            cubes[node.m_gridX, node.m_gridZ].GetComponent<Renderer>().material.color = (node.isAlive) ? Color.white : Color.black;;
+        }
+    }
+
 
     void CreateGrid()
     {
         grid = new Cell[m_sizeX, m_sizeZ];
+        cubes = new GameObject[m_sizeX, m_sizeZ];
         bottomLeftCorner = transform.position - Vector3.right * m_worldSize.x / 2 - Vector3.forward * m_worldSize.z / 2;
         for (int x = 0; x < m_sizeX; x++)
         {
@@ -41,6 +52,9 @@ public class CustomGrid : MonoBehaviour
             {
                 //Populates grid from bottom left corner
                 Vector3 worldPoint = bottomLeftCorner + Vector3.right * (x * m_nodeDiameter + m_radius) + Vector3.forward * (z * m_nodeDiameter + m_radius);
+                GameObject temp = Instantiate(cube, worldPoint, cube.transform.rotation);
+                temp.transform.localScale = new Vector3(m_nodeDiameter, 1, m_nodeDiameter);
+                cubes[x, z] = temp;
                 grid[x, z] = new Cell(false, worldPoint, x, z);
             }
         }
@@ -79,14 +93,14 @@ public class CustomGrid : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.black;
-        Gizmos.DrawWireCube(transform.position, m_worldSize);
-        if (grid == null) return;
-        foreach (Cell node in grid)
-        {
-            Gizmos.color = (node.isAlive) ? Color.white : Color.black;
-            Gizmos.DrawCube(node.worldPos, Vector3.one * (m_nodeDiameter - 0.1f));
-        }
+        // Gizmos.color = Color.black;
+        // Gizmos.DrawWireCube(transform.position, m_worldSize);
+        // if (grid == null) return;
+        // foreach (Cell node in grid)
+        // {
+        //     Gizmos.color = (node.isAlive) ? Color.white : Color.black;
+        //     Gizmos.DrawCube(node.worldPos, Vector3.one * (m_nodeDiameter - 0.1f));
+        // }
 
 
     }

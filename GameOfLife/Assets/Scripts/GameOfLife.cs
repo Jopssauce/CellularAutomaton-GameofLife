@@ -14,11 +14,13 @@ public class GameOfLife : MonoBehaviour
         StartCoroutine(updateCells);
     }
 
-    // Cells will always check their sorrounding neighbours 
-    // 1. Cell will die with less than two neigbours
-    // 2. Cell will live of there are 2 or three neigbours
-    // 3. Cell will die if there are 3 or more cells
-    // 4. Dead cells will live if there are 3 exactly three neigbours
+// For a space that is 'populated':
+// Each cell with one or no neighbors dies, as if by solitude.
+// Each cell with four or more neighbors dies, as if by overpopulation.
+// Each cell with two or three neighbors survives.
+
+// For a space that is 'empty' or 'unpopulated'
+// Each cell with three neighbors becomes populated.
     IEnumerator UpdateCells()
     {
         while (true)
@@ -35,12 +37,10 @@ public class GameOfLife : MonoBehaviour
                         cell.isAlive = false;
                     if (cell.isAlive && neighbors.Count == 3 || neighbors.Count == 2)
                         cell.isAlive = true;
-                    if (cell.isAlive && neighbors.Count > 1)
+                    if (cell.isAlive && neighbors.Count > 3)
                         cell.isAlive = false;
                     if (cell.isAlive == false && neighbors.Count == 3)
                         cell.isAlive = true;
-                    if (cell.m_gridX == m_grid.m_sizeX || cell.m_gridZ == m_grid.m_sizeZ)
-                        cell.isAlive = false;
                     neighbors.Clear();
                 }
                 //yield return new WaitForSeconds(m_gameSpeed);
