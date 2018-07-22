@@ -14,37 +14,41 @@ public class GameOfLife : MonoBehaviour
         StartCoroutine(updateCells);
     }
 
-// For a space that is 'populated':
-// Each cell with one or no neighbors dies, as if by solitude.
-// Each cell with four or more neighbors dies, as if by overpopulation.
-// Each cell with two or three neighbors survives.
+    // For a space that is 'populated':
+    // Each cell with one or no neighbors dies, as if by solitude.
+    // Each cell with four or more neighbors dies, as if by overpopulation.
+    // Each cell with two or three neighbors survives.
 
-// For a space that is 'empty' or 'unpopulated'
-// Each cell with three neighbors becomes populated.
+    // For a space that is 'empty' or 'unpopulated'
+    // Each cell with three neighbors becomes populated.
     IEnumerator UpdateCells()
     {
         while (true)
         {
-            List<Cell> neighbors = new List<Cell>();
-            for (int x = 0; x < m_grid.m_sizeX; x++)
+            if (m_grid.simulate)
             {
-                for (int z = 0; z < m_grid.m_sizeZ; z++)
+                List<Cell> neighbors = new List<Cell>();
+                for (int x = 0; x < m_grid.m_sizeX; x++)
                 {
-                    Cell cell = m_grid.grid[x, z];
-                    neighbors = GetNeighbors(cell);
+                    for (int z = 0; z < m_grid.m_sizeZ; z++)
+                    {
+                        Cell cell = m_grid.grid[x, z];
+                        neighbors = GetNeighbors(cell);
 
-                    if (cell.isAlive && neighbors.Count < 2)
-                        cell.isAlive = false;
-                    if (cell.isAlive && neighbors.Count == 3 || neighbors.Count == 2)
-                        cell.isAlive = true;
-                    if (cell.isAlive && neighbors.Count > 3)
-                        cell.isAlive = false;
-                    if (cell.isAlive == false && neighbors.Count == 3)
-                        cell.isAlive = true;
-                    neighbors.Clear();
+                        if (cell.isAlive && neighbors.Count < 2)
+                            cell.isAlive = false;
+                        if (cell.isAlive && neighbors.Count == 3 || neighbors.Count == 2)
+                            cell.isAlive = true;
+                        if (cell.isAlive && neighbors.Count > 3)
+                            cell.isAlive = false;
+                        if (cell.isAlive == false && neighbors.Count == 3)
+                            cell.isAlive = true;
+                        neighbors.Clear();
+                    }
+                    //yield return new WaitForSeconds(m_gameSpeed);
                 }
-                //yield return new WaitForSeconds(m_gameSpeed);
             }
+
             yield return new WaitForSeconds(m_gameSpeed);
         }
 

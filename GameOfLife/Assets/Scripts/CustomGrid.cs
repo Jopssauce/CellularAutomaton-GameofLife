@@ -9,6 +9,7 @@ public class CustomGrid : MonoBehaviour
     public Vector3 m_worldSize;
     public float m_radius;
     public int randomFrequency = 10;
+    public bool simulate = true;
     Vector3 bottomLeftCorner;
     public Cell[,] grid { get; private set; }
     public GameObject[,] cubes { get; private set; }
@@ -37,6 +38,10 @@ public class CustomGrid : MonoBehaviour
         foreach (Cell node in grid)
         {
             cubes[node.m_gridX, node.m_gridZ].GetComponent<Renderer>().material.color = (node.isAlive) ? Color.white : Color.black;
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            simulate = !simulate;
         }
     }
 
