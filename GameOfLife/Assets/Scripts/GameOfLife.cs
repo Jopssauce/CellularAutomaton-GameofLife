@@ -35,9 +35,9 @@ public class GameOfLife : MonoBehaviour
                         Cell cell = m_grid.grid[x, z];
                         neighbors = GetNeighbors(cell);
 
-                        if(neighbors.Count < 2 || neighbors.Count > 3) cell.isAlive = false;
-                        //if(neighbors.Count == 2 || neighbors.Count == 3) cell.isAlive = true;
-                        if(!cell.isAlive && neighbors.Count == 3) cell.isAlive = true;
+                        if (cell.isAlive && (neighbors.Count < 2 || neighbors.Count > 3)) cell.isAlive = false;
+                        //if(cell.isAlive && (neighbors.Count == 2 || neighbors.Count == 3)) cell.isAlive = true;
+                        if (!cell.isAlive && neighbors.Count == 3) cell.isAlive = true;
                         neighbors.Clear();
                     }
                 }
