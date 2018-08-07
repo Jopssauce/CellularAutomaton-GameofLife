@@ -27,17 +27,19 @@ public class GameOfLife : MonoBehaviour
         {
             if (m_grid.simulate)
             {
-                List<Cell> neighbors = new List<Cell>();
-
-                foreach (var cell in m_grid.grid)
+                for (int z = 0; z < m_grid.m_sizeZ; z++)
                 {
-                    neighbors = GetNeighbors(cell);
+                    for (int x = 0; x < m_grid.m_sizeX; x++)
+                    {
+                        List<Cell> neighbors = new List<Cell>();
+                        Cell cell = m_grid.grid[x, z];
+                        neighbors = GetNeighbors(cell);
 
-                    if (cell.isAlive && (neighbors.Count < 2 || neighbors.Count > 3) )
-                        cell.isAlive = false;
-                    if (cell.isAlive == false && neighbors.Count == 3)
-                        cell.isAlive = true;
-                    neighbors.Clear();
+                        if(neighbors.Count < 2 || neighbors.Count > 3) cell.isAlive = false;
+                        //if(neighbors.Count == 2 || neighbors.Count == 3) cell.isAlive = true;
+                        if(!cell.isAlive && neighbors.Count == 3) cell.isAlive = true;
+                        neighbors.Clear();
+                    }
                 }
             }
 
