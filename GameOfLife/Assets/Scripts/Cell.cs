@@ -2,48 +2,87 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cell {
+public class Cell
+{
+    public State state { get; private set; }
+    public Vector3Int gridPos;
+    public SpriteRenderer spriteRenderer;
 
-	protected bool m_isAlive;
-	protected Vector3 m_worldPos;
-
-	public int m_gridX, m_gridZ;
-
-
-	int m_heapIndex; 
-
-	public bool isAlive
-	{
-		get {return m_isAlive;}
-		set {m_isAlive = value;}
-	}
-
-	public Vector3 worldPos
-	{
-		get {return m_worldPos;}
-		set {m_worldPos = value;}
-	}
-
-    public int HeapIndex
+    public int liveNeighbors;
+    public Cell(State state, Vector3Int gridPos, SpriteRenderer spriteRenderer)
     {
-        get
+        this.spriteRenderer = spriteRenderer;
+        SetState(state);
+        this.gridPos = gridPos;
+    }
+
+    public enum State
+    {
+        Dead,
+        Alive
+    }
+
+    public void ProcessGeneration()
+    {
+        if (state == Cell.State.Alive)
         {
-			return m_heapIndex;
+            if (liveNeighbors < 2 || liveNeighbors > 3)
+            {
+                SetState(Cell.State.Dead);
+            }
+        }
+        else
+        {
+            if (liveNeighbors == 3)
+            {
+                SetState(Cell.State.Alive);
+            }
         }
 
-        set
+    }
+
+    public void SetState(Cell.State state)
+    {
+        this.state = state;
+        switch (this.state)
         {
-			m_heapIndex = value;
+            case State.Dead:
+                spriteRenderer.color = Color.black;
+                break;
+            case State.Alive:
+                spriteRenderer.color = Color.white;
+                break;
+            default:
+                break;
         }
     }
 
-    public Cell(bool walkable, Vector3 pos, int gridX, int gridZ)
-	{
-		m_isAlive = walkable;
-		m_worldPos = pos;
-		m_gridX = gridX;
-		m_gridZ = gridZ;
-	}
+    public int GetCellLiveNeighbors(Cell[,] cells)
+    {
+        int count = 0;
+        for (int y = -1; y <= 1; y++)
+        {
+            for (int x = -1; x <= 1; x++)
+            {
+                if (x == 0 && y == 0)
+                {
+                    continue;
+                }
 
+                int xPos = gridPos.x + x;
+                int yPos = gridPos.y + y;
+
+                if (xPos >= 0 && xPos < cells.GetLength(0) &&
+                    yPos >= 0 && yPos < cells.GetLength(0))
+                {
+                    if (cells[xPos, yPos].state == Cell.State.Alive)
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
 
 }
