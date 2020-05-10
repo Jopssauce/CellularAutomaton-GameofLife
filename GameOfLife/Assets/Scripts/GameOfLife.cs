@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameGrid : MonoBehaviour
+public class GameOfLife : MonoBehaviour
 {
     public Grid grid;
     public int size;
+    [Range(1, 50)]
+    public float gameSpeed = 20;
     public GameObject tilePrefab;
 
     public Cell[,] cells;
@@ -13,6 +15,7 @@ public class GameGrid : MonoBehaviour
 
     GameObject mousePointer;
     bool isPaused = true;
+    float timer;
 
     private void Awake()
     {
@@ -26,12 +29,16 @@ public class GameGrid : MonoBehaviour
     private void Start()
     {
         InitializeGame();
+        timer = 1;
     }
 
     private void Update()
     {
-        if (!isPaused)
+        
+        timer -= Time.deltaTime * gameSpeed;
+        if (!isPaused && timer <= 0)
         {
+            timer = 1;
             mousePointer.SetActive(false);
             //First Stage: Get cell live Neighbors
             for (int y = 0; y < size; y++)
@@ -90,7 +97,7 @@ public class GameGrid : MonoBehaviour
                 {
                     int range = Random.Range(0, 100);
                     Cell.State state = Cell.State.Dead;
-                    if (range < 20)
+                    if (range < 50)
                     {
                         state = Cell.State.Alive;
                     }

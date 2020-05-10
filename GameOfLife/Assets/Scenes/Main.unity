@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 1518016224}
   - component: {fileID: 1518016223}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: Game of Life
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -259,8 +259,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 1518016224}
   size: 100
+  gameSpeed: 20
   tilePrefab: {fileID: 1074423776776339471, guid: f18fb5634890c1348b0d8c4e1628c4dc,
     type: 3}
+  blankCanvas: 0
 --- !u!156049354 &1518016224
 Grid:
   m_ObjectHideFlags: 0
