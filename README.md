@@ -1,2 +1,5 @@
 # CellularAutomaton-GameofLife
-Just a simple try on Cellular Automatons
+<p align="center">
+  <img src="https://i.imgur.com/OF7c04Q.gif">
+</p>
+Just a simple try on Cellular Automatons.
