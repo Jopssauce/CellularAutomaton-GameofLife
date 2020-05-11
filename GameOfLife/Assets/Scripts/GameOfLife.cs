@@ -98,7 +98,6 @@ public class GameOfLife : MonoBehaviour
             for (int x = 0; x < size; x++)
             {
 
-                //GameObject tile = Instantiate(tilePrefab, grid.GetCellCenterWorld(new Vector3Int(x, y, 0)), tilePrefab.transform.rotation);
 
                 if (blankCanvas)
                 {
