@@ -73,7 +73,7 @@ public class Cell
                 int yPos = gridPos.y + y;
 
                 if (xPos >= 0 && xPos < cells.GetLength(0) &&
-                    yPos >= 0 && yPos < cells.GetLength(0))
+                    yPos >= 0 && yPos < cells.GetLength(1))
                 {
                     if (cells[xPos, yPos].state == Cell.State.Alive)
                     {

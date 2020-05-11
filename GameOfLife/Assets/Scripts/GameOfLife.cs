@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class GameOfLife : MonoBehaviour
 {
-    public int size;
+    //Vertical Size
+    public int sizeY = 100;
+    public int sizeX { get; private set; }
+
     [Range(1, 50)]
     public float gameSpeed = 20;
     public GameObject tilePrefab;
 
     public Cell[,] cells;
     public bool blankCanvas;
+    public bool fillCameraArea;
 
     GameObject mousePointer;
     bool isPaused = true;
@@ -20,7 +24,18 @@ public class GameOfLife : MonoBehaviour
 
     private void Awake()
     {
-        cells = new Cell[size, size];
+        //Set sizeX to fill up the camera orthographic area
+        if (fillCameraArea)
+        {
+            sizeX = (sizeY * Screen.width) / Screen.height;
+        }
+        else
+        {
+            sizeX = sizeY;
+        }
+   
+        cells = new Cell[sizeX, sizeY];
+
         //Initialize Mouse Pointer
         mousePointer = Instantiate(tilePrefab);
         mousePointer.GetComponent<SpriteRenderer>().color = Color.red;
@@ -30,7 +45,7 @@ public class GameOfLife : MonoBehaviour
     private void Start()
     {
         InitializeGame();
-        Camera.main.orthographicSize = size / 2;
+        Camera.main.orthographicSize = sizeY / 2;
         timer = 1;
     }
 
@@ -43,9 +58,9 @@ public class GameOfLife : MonoBehaviour
             timer = 1;
             mousePointer.SetActive(false);
             //First Stage: Get cell live Neighbors
-            for (int y = 0; y < size; y++)
+            for (int y = 0; y < sizeY; y++)
             {
-                for (int x = 0; x < size; x++)
+                for (int x = 0; x < sizeX; x++)
                 {
                     Cell currentCell = cells[x, y];
                     currentCell.liveNeighbors = currentCell.GetCellLiveNeighbors(cells);
@@ -53,15 +68,14 @@ public class GameOfLife : MonoBehaviour
             }
 
             //Second Stage: Process Cell Generation
-            for (int y = 0; y < size; y++)
+            for (int y = 0; y < sizeY; y++)
             {
-                for (int x = 0; x < size; x++)
+                for (int x = 0; x < sizeX; x++)
                 {
                     Cell currentCell = cells[x, y];
                     currentCell.ProcessGeneration();
                 }
             }
-            //texture2D.SetPixels32(colors);
             texture2D.Apply();
             //The reason I split them into stages is because updating cells at the same with with getting live neighbors causes the wrong behavior
             //I suspect that this causes inconsistency leading to certain cells never dying or behaving unexpectedly
@@ -72,6 +86,8 @@ public class GameOfLife : MonoBehaviour
             ProcessInputPainting();
             texture2D.Apply();
         }
+
+        //Hotkeys
         if (Input.GetKeyDown(KeyCode.P))
         {
             isPaused = !isPaused;
@@ -87,18 +103,17 @@ public class GameOfLife : MonoBehaviour
     void InitializeGame()
     {
         //Initialize Texture
-        texture2D = new Texture2D(size, size);
+        texture2D = new Texture2D(sizeX, sizeY);
         texture2D.filterMode = FilterMode.Point;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.material.mainTexture = texture2D;
         spriteRenderer.sprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 1);
 
-        for (int y = 0; y < size; y++)
+        //Setup Cells Grid and Paint Texture
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < size; x++)
+            for (int x = 0; x < sizeX; x++)
             {
-
-
                 if (blankCanvas)
                 {
                     cells[x, y] = new Cell(Cell.State.Dead, new Vector3Int(x, y, 0), texture2D);
@@ -131,12 +146,12 @@ public class GameOfLife : MonoBehaviour
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         //World Coordinates
-        int worldX = Mathf.FloorToInt(worldPos.x / size * texture2D.width);
-        int worldY = Mathf.FloorToInt(worldPos.y / size * texture2D.height);
+        int worldX = Mathf.FloorToInt(worldPos.x  / sizeX * texture2D.width);
+        int worldY = Mathf.FloorToInt(worldPos.y / sizeY * texture2D.height);
 
         //Grid Coordinates
-        int gridX = worldX + size / 2;
-        int gridY = worldY + size / 2;
+        int gridX = worldX + sizeX / 2;
+        int gridY = worldY + sizeY / 2;
 
 
         if (IsInside(gridX, gridY))
@@ -144,7 +159,15 @@ public class GameOfLife : MonoBehaviour
             Cell currentHoveredCell = cells[gridX, gridY];
 
             //Centered World Coordinates
-            mousePointer.transform.position = new Vector3(worldX + 0.5f, worldY + 0.5f, 0);
+            if (fillCameraArea)
+            {
+                mousePointer.transform.position = new Vector3(worldX, worldY + 0.5f, 0);
+            }
+            else
+            {
+                mousePointer.transform.position = new Vector3(worldX + 0.5f, worldY + 0.5f, 0);
+            }
+            
 
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
             {
@@ -164,14 +187,14 @@ public class GameOfLife : MonoBehaviour
         {
             cameraSize += Input.mouseScrollDelta.y;
         }
-        Camera.main.orthographicSize = Mathf.Clamp(cameraSize, 10, size / 2);
+        Camera.main.orthographicSize = Mathf.Clamp(cameraSize, 10, sizeY / 2);
     }
 
     public void ForceClear()
     {
-        for (int y = 0; y < size; y++)
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < size; x++)
+            for (int x = 0; x < sizeX; x++)
             {
                 Cell currentCell = cells[x, y];
                 currentCell.SetState(Cell.State.Dead);
@@ -182,7 +205,7 @@ public class GameOfLife : MonoBehaviour
     public bool IsInside(int x, int y)
     {
         if (x >= 0 && x < cells.GetLength(0) &&
-            y >= 0 && y < cells.GetLength(0))
+            y >= 0 && y < cells.GetLength(1))
         {
             return true;
         }
