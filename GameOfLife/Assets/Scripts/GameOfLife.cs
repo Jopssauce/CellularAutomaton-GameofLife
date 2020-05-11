@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameOfLife : MonoBehaviour
 {
-    public Grid grid;
     public int size;
     [Range(1, 50)]
     public float gameSpeed = 20;
@@ -16,6 +15,8 @@ public class GameOfLife : MonoBehaviour
     GameObject mousePointer;
     bool isPaused = true;
     float timer;
+
+    Texture2D texture2D;
 
     private void Awake()
     {
@@ -29,12 +30,13 @@ public class GameOfLife : MonoBehaviour
     private void Start()
     {
         InitializeGame();
+        Camera.main.orthographicSize = size / 2;
         timer = 1;
     }
 
     private void Update()
     {
-        
+
         timer -= Time.deltaTime * gameSpeed;
         if (!isPaused && timer <= 0)
         {
@@ -47,7 +49,6 @@ public class GameOfLife : MonoBehaviour
                 {
                     Cell currentCell = cells[x, y];
                     currentCell.liveNeighbors = currentCell.GetCellLiveNeighbors(cells);
-
                 }
             }
 
@@ -60,6 +61,8 @@ public class GameOfLife : MonoBehaviour
                     currentCell.ProcessGeneration();
                 }
             }
+            //texture2D.SetPixels32(colors);
+            texture2D.Apply();
             //The reason I split them into stages is because updating cells at the same with with getting live neighbors causes the wrong behavior
             //I suspect that this causes inconsistency leading to certain cells never dying or behaving unexpectedly
         }
@@ -67,6 +70,7 @@ public class GameOfLife : MonoBehaviour
         {
             mousePointer.SetActive(true);
             ProcessInputPainting();
+            texture2D.Apply();
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -82,16 +86,23 @@ public class GameOfLife : MonoBehaviour
 
     void InitializeGame()
     {
+        //Initialize Texture
+        texture2D = new Texture2D(size, size);
+        texture2D.filterMode = FilterMode.Point;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.material.mainTexture = texture2D;
+        spriteRenderer.sprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 1);
+
         for (int y = 0; y < size; y++)
         {
             for (int x = 0; x < size; x++)
             {
 
-                GameObject tile = Instantiate(tilePrefab, grid.GetCellCenterWorld(new Vector3Int(x, y, 0)), tilePrefab.transform.rotation);
+                //GameObject tile = Instantiate(tilePrefab, grid.GetCellCenterWorld(new Vector3Int(x, y, 0)), tilePrefab.transform.rotation);
 
                 if (blankCanvas)
                 {
-                    cells[x, y] = new Cell(Cell.State.Dead, new Vector3Int(x, y, 0), tile.GetComponent<SpriteRenderer>());
+                    cells[x, y] = new Cell(Cell.State.Dead, new Vector3Int(x, y, 0), texture2D);
                 }
                 else
                 {
@@ -100,27 +111,41 @@ public class GameOfLife : MonoBehaviour
                     if (range < 50)
                     {
                         state = Cell.State.Alive;
+                        texture2D.SetPixel(x, y, Color.white);
                     }
                     else
                     {
                         state = Cell.State.Dead;
+                        texture2D.SetPixel(x, y, Color.black);
                     }
-                    cells[x, y] = new Cell(state, new Vector3Int(x, y, 0), tile.GetComponent<SpriteRenderer>());
+                    cells[x, y] = new Cell(state, new Vector3Int(x, y, 0), texture2D);
+                    
                 }
 
             }
         }
+        texture2D.Apply();
     }
 
     void ProcessInputPainting()
     {
-        Vector3Int gridMousePos = grid.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (IsInside(gridMousePos.x, gridMousePos.y))
+        //World Coordinates
+        int worldX = Mathf.FloorToInt(worldPos.x / size * texture2D.width);
+        int worldY = Mathf.FloorToInt(worldPos.y / size * texture2D.height);
+
+        //Grid Coordinates
+        int gridX = worldX + size / 2;
+        int gridY = worldY + size / 2;
+
+
+        if (IsInside(gridX, gridY))
         {
-            Cell currentHoveredCell = cells[gridMousePos.x, gridMousePos.y];
+            Cell currentHoveredCell = cells[gridX, gridY];
 
-            mousePointer.transform.position = grid.GetCellCenterWorld(currentHoveredCell.gridPos);
+            //Centered World Coordinates
+            mousePointer.transform.position = new Vector3(worldX + 0.5f, worldY + 0.5f, 0);
 
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
             {
@@ -167,17 +192,17 @@ public class GameOfLife : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        for (int x = -1; x < size + 1; x++)
-        {
-            for (int y = -1; y < size + 1; y++)
-            {
-                if (y == size || x == size || y == -1 || x == -1)
-                {
-                    Gizmos.DrawCube(grid.GetCellCenterWorld(new Vector3Int(x, y, 0)), new Vector3(1, 1, 1));
-                }
-            }
-        }
+        //Gizmos.color = Color.blue;
+        //for (int x = -1; x < size + 1; x++)
+        //{
+        //    for (int y = -1; y < size + 1; y++)
+        //    {
+        //        if (y == size || x == size || y == -1 || x == -1)
+        //        {
+        //            Gizmos.DrawCube(grid.GetCellCenterWorld(new Vector3Int(x, y, 0)), new Vector3(1, 1, 1));
+        //        }
+        //    }
+        //}
     }
 
 }

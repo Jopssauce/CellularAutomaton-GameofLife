@@ -6,12 +6,12 @@ public class Cell
 {
     public State state { get; private set; }
     public Vector3Int gridPos;
-    public SpriteRenderer spriteRenderer;
-
+    public Texture2D texture2D;
     public int liveNeighbors;
-    public Cell(State state, Vector3Int gridPos, SpriteRenderer spriteRenderer)
+
+    public Cell(State state, Vector3Int gridPos, Texture2D texture2D)
     {
-        this.spriteRenderer = spriteRenderer;
+        this.texture2D = texture2D;
         SetState(state);
         this.gridPos = gridPos;
     }
@@ -47,10 +47,10 @@ public class Cell
         switch (this.state)
         {
             case State.Dead:
-                spriteRenderer.color = Color.black;
+                texture2D.SetPixel(gridPos.x, gridPos.y, Color.black);
                 break;
             case State.Alive:
-                spriteRenderer.color = Color.white;
+                texture2D.SetPixel(gridPos.x, gridPos.y, Color.white);
                 break;
             default:
                 break;
