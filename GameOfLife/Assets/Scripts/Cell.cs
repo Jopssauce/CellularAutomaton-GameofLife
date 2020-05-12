@@ -8,6 +8,7 @@ public class Cell
     public Vector3Int gridPos;
     public Texture2D texture2D;
     public int liveNeighbors;
+    public List<Cell> neighbors = new List<Cell>();
 
     public Cell(State state, Vector3Int gridPos, Texture2D texture2D)
     {
@@ -57,9 +58,9 @@ public class Cell
         }
     }
 
-    public int GetCellLiveNeighbors(Cell[,] cells)
+    public void GetNeigbors(Cell[,] cells)
     {
-        int count = 0;
+        int index = 0;
         for (int y = -1; y <= 1; y++)
         {
             for (int x = -1; x <= 1; x++)
@@ -75,14 +76,24 @@ public class Cell
                 if (xPos >= 0 && xPos < cells.GetLength(0) &&
                     yPos >= 0 && yPos < cells.GetLength(1))
                 {
-                    if (cells[xPos, yPos].state == Cell.State.Alive)
-                    {
-                        count++;
-                    }
+                    neighbors.Add(cells[xPos, yPos]);
+                    index++;
                 }
+
             }
         }
-        return count;
+    }
+
+    public void GetLiveNeigbors()
+    {
+        liveNeighbors = 0;
+        for (int i = 0; i < neighbors.Count; i++)
+        {
+            if (neighbors[i].state == State.Alive)
+            {
+                liveNeighbors++;
+            }
+        }
     }
 
 }

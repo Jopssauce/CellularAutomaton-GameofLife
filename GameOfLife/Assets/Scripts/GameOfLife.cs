@@ -63,7 +63,7 @@ public class GameOfLife : MonoBehaviour
                 for (int x = 0; x < sizeX; x++)
                 {
                     Cell currentCell = cells[x, y];
-                    currentCell.liveNeighbors = currentCell.GetCellLiveNeighbors(cells);
+                    currentCell.GetLiveNeigbors();
                 }
             }
 
@@ -136,6 +136,14 @@ public class GameOfLife : MonoBehaviour
                     
                 }
 
+            }
+        }
+
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                cells[x, y].GetNeigbors(cells);
             }
         }
         texture2D.Apply();
