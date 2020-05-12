@@ -560,6 +560,7 @@ GameObject:
   - component: {fileID: 1518016224}
   - component: {fileID: 1518016223}
   - component: {fileID: 1518016225}
+  - component: {fileID: 1518016226}
   m_Layer: 0
   m_Name: Game of Life
   m_TagString: Untagged
@@ -661,6 +662,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1518016226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518016221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da76edeceead644798bb1e55e3a55a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2082392901
 GameObject:
   m_ObjectHideFlags: 0
