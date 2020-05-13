@@ -1,5 +1,9 @@
-# CellularAutomaton-GameofLife
+# John Conway's Game of Life in Unity
+
 <p align="center">
   <img src="https://i.imgur.com/OF7c04Q.gif">
 </p>
-Just a simple try on Cellular Automatons.
+
+<p align="center">
+  <img src="https://i.imgur.com/yGDZa41.gif">
+</p>
