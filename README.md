@@ -1,11 +1,6 @@
 # John Conway's Game of Life in Unity
+Unity 2020.1.17f1
 
-First iteration of the build
-<p align="center">
-  <img src="https://i.imgur.com/OF7c04Q.gif">
-</p>
-
-Current iteration of the build
 <p align="center">
   <img src="https://i.imgur.com/yGDZa41.gif">
 </p>
