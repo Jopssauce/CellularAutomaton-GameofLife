@@ -9,9 +9,12 @@ public class Cell
     public Texture2D texture2D;
     public int liveNeighbors;
     public List<Cell> neighbors = new List<Cell>();
+    public Color liveColor;
+    public Color deadColor = Color.black;
 
-    public Cell(State state, Vector3Int gridPos, Texture2D texture2D)
+    public Cell(State state, Vector3Int gridPos, Texture2D texture2D, Color liveColor)
     {
+        this.liveColor = liveColor;
         this.texture2D = texture2D;
         SetState(state);
         this.gridPos = gridPos;
@@ -48,10 +51,10 @@ public class Cell
         switch (this.state)
         {
             case State.Dead:
-                texture2D.SetPixel(gridPos.x, gridPos.y, Color.black);
+                texture2D.SetPixel(gridPos.x, gridPos.y, deadColor);
                 break;
             case State.Alive:
-                texture2D.SetPixel(gridPos.x, gridPos.y, Color.white);
+                texture2D.SetPixel(gridPos.x, gridPos.y, liveColor);
                 break;
             default:
                 break;

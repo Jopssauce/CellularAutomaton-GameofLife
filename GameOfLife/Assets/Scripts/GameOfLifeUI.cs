@@ -12,6 +12,7 @@ public class GameOfLifeUI : MonoBehaviour
     public TextMeshProUGUI  gridSize;
     public TextMeshProUGUI  liveCells;
     public TextMeshProUGUI  generation;
+    public ColorDropdown    colorDropdown;
     public Button           restart;
     public TMP_InputField   gridSizeInput;
     public Slider           gameSpeed;
@@ -34,6 +35,9 @@ public class GameOfLifeUI : MonoBehaviour
     {
         // Game Info
         gameOfLife.onGenerationUpdate += UpdateGameInfo;
+
+        // Cell Color
+        colorDropdown.onValueChanged.AddListener(UpdateCellColor);
 
         // Grid Size
         UpdateGridInput();
@@ -61,6 +65,12 @@ public class GameOfLifeUI : MonoBehaviour
     {
         liveCells.text = $"Live Cells: {gameOfLife.liveCells.ToString()}";
         generation.text = $"Generation: {gameOfLife.currentGeneration.ToString()}";
+    }
+
+    public void UpdateCellColor(Color color)
+    {
+        gameOfLife.cellColor = color;
+        Restart();
     }
 
     public void UpdateGameSpeed(float value)

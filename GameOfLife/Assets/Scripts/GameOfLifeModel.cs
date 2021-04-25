@@ -33,7 +33,7 @@ public class GameOfLifeModel : MonoBehaviour
         {
             timer = 1;
             mousePointer.SetActive(false);
-            //First Stage: Get cell live Neighbors
+            // Get cell live Neighbors
             for (int y = 0; y < _controller.sizeY; y++)
             {
                 for (int x = 0; x < sizeX; x++)
@@ -44,7 +44,7 @@ public class GameOfLifeModel : MonoBehaviour
             }
 
             _controller.onGenerationUpdate?.Invoke();
-            //Second Stage: Process Cell Generation
+            // Process Cell Generation
             for (int y = 0; y < _controller.sizeY; y++)
             {
                 for (int x = 0; x < sizeX; x++)
@@ -106,14 +106,14 @@ public class GameOfLifeModel : MonoBehaviour
                     if (range < 50)
                     {
                         state = Cell.State.Alive;
-                        texture2D.SetPixel(x, y, Color.white);
+                        texture2D.SetPixel(x, y, _controller.cellColor);
                     }
                     else
                     {
                         state = Cell.State.Dead;
                         texture2D.SetPixel(x, y, Color.black);
                     }
-                    cells[x, y] = new Cell(state, new Vector3Int(x, y, 0), texture2D);             
+                    cells[x, y] = new Cell(state, new Vector3Int(x, y, 0), texture2D, _controller.cellColor);             
             }
         }
 

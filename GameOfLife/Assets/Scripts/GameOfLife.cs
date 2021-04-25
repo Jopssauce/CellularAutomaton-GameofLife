@@ -35,6 +35,7 @@ public class GameOfLife : MonoBehaviour
     public bool isPainting = false;
     public int liveCells;
     public int currentGeneration;
+    public Color cellColor;
 
     // C# Events are used here because they are more performant than Unity Events
     // These events are called multiple times
@@ -50,11 +51,7 @@ public class GameOfLife : MonoBehaviour
     {
         Camera.main.orthographicSize = sizeY / 2;
 
-        onCellUpdate += ((cell) =>
-        {
-            if (cell.state == Cell.State.Alive)
-                liveCells++;
-        });
+        onCellUpdate += CellUpdateCallback;
         onGenerationUpdate += (() =>
         {
             liveCells = 0;
@@ -65,6 +62,15 @@ public class GameOfLife : MonoBehaviour
     private void Update()
     {
         model.GameUpdate();
+    }
+
+    void CellUpdateCallback(Cell cell)
+    {
+        if (cell.state == Cell.State.Alive)
+        {
+            liveCells++;
+        }
+        cell.liveColor = cellColor;
     }
 
     public void RestartGame()
