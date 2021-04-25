@@ -10,6 +10,8 @@ public class GameOfLifeUI : MonoBehaviour
     public GameOfLife       gameOfLife;
     [Header("UI Elements")]
     public TextMeshProUGUI  gridSize;
+    public TextMeshProUGUI  liveCells;
+    public TextMeshProUGUI  generation;
     public Button           restart;
     public TMP_InputField   gridSizeInput;
     public Slider           gameSpeed;
@@ -30,14 +32,17 @@ public class GameOfLifeUI : MonoBehaviour
 
     private void Start()
     {
+        // Game Info
+        gameOfLife.onGenerationUpdate += UpdateGameInfo;
+
         // Grid Size
         UpdateGridInput();
 
         // Game Speed
-        gameSpeed.value = gameOfLife.gameSpeed;
-        gameSpeedValue.text = gameOfLife.gameSpeed.ToString();
         gameSpeed.minValue = gameOfLife.minSpeed;
         gameSpeed.maxValue = gameOfLife.maxSpeed;
+        gameSpeed.value = gameOfLife.gameSpeed;
+        gameSpeedValue.text = gameOfLife.gameSpeed.ToString();
         gameSpeed.onValueChanged.AddListener(onGameSpeedValueChanged.Invoke);
 
         // Fill Area on restart
@@ -50,6 +55,12 @@ public class GameOfLifeUI : MonoBehaviour
 
         // Restart
         restart.onClick.AddListener(onRestartClicked.Invoke);
+    }
+
+    public void UpdateGameInfo()
+    {
+        liveCells.text = $"Live Cells: {gameOfLife.liveCells.ToString()}";
+        generation.text = $"Generation: {gameOfLife.currentGeneration.ToString()}";
     }
 
     public void UpdateGameSpeed(float value)

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 // Controller for the Game Of Life
 public class GameOfLife : MonoBehaviour
@@ -32,6 +33,13 @@ public class GameOfLife : MonoBehaviour
     public float gameSpeed = 20;
     public bool fillCameraArea;
     public bool isPainting = false;
+    public int liveCells;
+    public int currentGeneration;
+
+    // C# Events are used here because they are more performant than Unity Events
+    // These events are called multiple times
+    public System.Action<Cell> onCellUpdate;
+    public System.Action onGenerationUpdate;
 
     private void Awake()
     {
@@ -41,6 +49,17 @@ public class GameOfLife : MonoBehaviour
     private void Start()
     {
         Camera.main.orthographicSize = sizeY / 2;
+
+        onCellUpdate += ((cell) =>
+        {
+            if (cell.state == Cell.State.Alive)
+                liveCells++;
+        });
+        onGenerationUpdate += (() =>
+        {
+            liveCells = 0;
+            currentGeneration++;
+        });
     }
 
     private void Update()

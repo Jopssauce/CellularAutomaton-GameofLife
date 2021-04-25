@@ -43,6 +43,7 @@ public class GameOfLifeModel : MonoBehaviour
                 }
             }
 
+            _controller.onGenerationUpdate?.Invoke();
             //Second Stage: Process Cell Generation
             for (int y = 0; y < _controller.sizeY; y++)
             {
@@ -50,6 +51,7 @@ public class GameOfLifeModel : MonoBehaviour
                 {
                     Cell currentCell = cells[x, y];
                     currentCell.ProcessGeneration();
+                    _controller.onCellUpdate?.Invoke(currentCell);
                 }
             }
             texture2D.Apply();
