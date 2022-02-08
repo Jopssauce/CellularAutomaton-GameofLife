@@ -20,6 +20,7 @@ public class GameOfLifeModel : MonoBehaviour
     public NativeArray<Vector2> cellsPosition;
     public NativeArray<int> cellsNeighborCount;
     public NativeArray<int> cellsLiveNeigbors;
+    public NativeArray<Color32> rawTexture2D;
 
     float timer = 1;
     int cells;
@@ -33,8 +34,6 @@ public class GameOfLifeModel : MonoBehaviour
         mousePointer = Instantiate(_controller.tilePrefab);
         mousePointer.GetComponent<SpriteRenderer>().color = Color.red;
         mousePointer.GetComponent<SpriteRenderer>().sortingOrder = 10;
-
-
     }
 
     public void GameUpdate()
@@ -60,9 +59,19 @@ public class GameOfLifeModel : MonoBehaviour
                 cellsPosition = cellsPosition,
                 size = size,
             };
-
             JobHandle getLiveNeighborsHandle = getLiveNeighborsJob.Schedule(cells, 1);
             getLiveNeighborsHandle.Complete();
+
+            //rawTexture2D = texture2D.GetRawTextureData<Color32>();
+            //ProcessGenerationsJob processGenerationsJob = new ProcessGenerationsJob()
+            //{
+            //    cellsStates = cellsStates,
+            //    cellsLiveNeigbors = cellsLiveNeigbors,
+            //    rawTexture2D = rawTexture2D
+            //};
+            //JobHandle processGenerationsHandle = processGenerationsJob.Schedule(cells, 1, getLiveNeighborsHandle);
+            //processGenerationsHandle.Complete();
+            //texture2D.LoadRawTextureData(rawTexture2D);
 
             for (int i = 0; i < cells; i++)
             {
