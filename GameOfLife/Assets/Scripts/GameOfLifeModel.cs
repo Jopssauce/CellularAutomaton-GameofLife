@@ -14,7 +14,7 @@ public class GameOfLifeModel : MonoBehaviour
     GameObject mousePointer;
     Texture2D texture2D;
     //public Cell[,] cells;
-
+    public NativeArray<Vector2> size;
     public NativeArray<Cell.State> cellsStates;
     public NativeArray<Vector4> cellsColors;
     public NativeArray<Vector2> cellsPosition;
@@ -53,11 +53,16 @@ public class GameOfLifeModel : MonoBehaviour
             //        currentCell.GetLiveNeigbors();
             //    }
             //}
-
-            for (int i = 0; i < cells; i++)
+            GetLiveNeighborsJob getLiveNeighborsJob = new GetLiveNeighborsJob()
             {
-                cellsLiveNeigbors[i] = GetLiveNeigbors(i);
-            }
+                cellsStates = cellsStates,
+                cellsLiveNeigbors = cellsLiveNeigbors,
+                cellsPosition = cellsPosition,
+                size = size,
+            };
+
+            JobHandle getLiveNeighborsHandle = getLiveNeighborsJob.Schedule(cells, 1);
+            getLiveNeighborsHandle.Complete();
 
             for (int i = 0; i < cells; i++)
             {
@@ -171,6 +176,9 @@ public class GameOfLifeModel : MonoBehaviour
         InitGrid();
 
         cells = sizeX * _controller.sizeY;
+        size =
+            new NativeArray<Vector2>(1, Allocator.Persistent);
+        size[0] = new Vector2(sizeX, _controller.sizeY);
         cellsStates =
             new NativeArray<Cell.State>(cells, Allocator.Persistent);
         cellsColors =
@@ -294,6 +302,7 @@ public class GameOfLifeModel : MonoBehaviour
 
     private void OnDestroy()
     {
+        size.Dispose();
         cellsStates.Dispose();
         cellsColors.Dispose();
         cellsPosition.Dispose();
