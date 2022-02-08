@@ -75,7 +75,7 @@ public class GameOfLife : MonoBehaviour
 
     public void RestartGame()
     {
-        model.ForceClear();
+        //model.ForceClear();
         model.InitializeGame();
         Camera.main.orthographicSize = sizeY / 2;
     }
