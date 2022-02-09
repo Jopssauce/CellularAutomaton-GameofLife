@@ -317,5 +317,7 @@ public class GameOfLifeModel : MonoBehaviour
         cellsPosition.Dispose();
         cellsNeighborCount.Dispose();
         cellsLiveNeigbors.Dispose();
+        if (rawTexture2D.IsCreated)
+            rawTexture2D.Dispose();
     }
 }
