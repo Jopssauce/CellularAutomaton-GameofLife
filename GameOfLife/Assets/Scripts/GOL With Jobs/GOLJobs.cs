@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Jobs;
 using Unity.Collections;
-
+/// <summary>
+/// Result = I was able to squeeze out a bit more performance by surpsingly using less performant code. Not practical at all, this can be improved!
+/// Test was done with 10 worker threads.
+/// </summary>
 public class GOLJobs : MonoBehaviour
 {
     [SerializeField]
@@ -51,23 +54,24 @@ public class GOLJobs : MonoBehaviour
             JobHandle getLiveNeighborsHandle = getLiveNeighborsJob.Schedule(cells, 1);
             getLiveNeighborsHandle.Complete();
 
-            /// There is an currently issue where single cells arent dying or being updated by the texture 
+            /// There is currently an issue where single cells arent dying or being updated at the texture 
+            /// This only happens using Jobs and was fixed by adding an else statement to kill a cell at line:36 of ProcessGenerationsJob.cs
 
-            //rawTexture2D = texture2D.GetRawTextureData<Color32>();
-            //ProcessGenerationsJob processGenerationsJob = new ProcessGenerationsJob()
-            //{
-            //    cellsStates = cellsStates,
-            //    cellsLiveNeigbors = cellsLiveNeigbors,
-            //    rawTexture2D = rawTexture2D
-            //};
-            //JobHandle processGenerationsHandle = processGenerationsJob.Schedule(cells, 1, getLiveNeighborsHandle);
-            //processGenerationsHandle.Complete();
-            //texture2D.LoadRawTextureData(rawTexture2D);
-
-            for (int i = 0; i < cells; i++)
+            rawTexture2D = texture2D.GetRawTextureData<Color32>();
+            ProcessGenerationsJob processGenerationsJob = new ProcessGenerationsJob()
             {
-                ProcessGeneration(i, cellsLiveNeigbors[i]);
-            }
+                cellsStates = cellsStates,
+                cellsLiveNeigbors = cellsLiveNeigbors,
+                rawTexture2D = rawTexture2D
+            };
+            JobHandle processGenerationsHandle = processGenerationsJob.Schedule(cells, 1, getLiveNeighborsHandle);
+            processGenerationsHandle.Complete();
+            texture2D.LoadRawTextureData(rawTexture2D);
+
+            //for (int i = 0; i < cells; i++)
+            //{
+            //    ProcessGeneration(i, cellsLiveNeigbors[i]);
+            //}
             texture2D.Apply();
         }
     }

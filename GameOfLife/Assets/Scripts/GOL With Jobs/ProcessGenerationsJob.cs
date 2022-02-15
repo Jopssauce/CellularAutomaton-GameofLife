@@ -31,6 +31,11 @@ public struct ProcessGenerationsJob : IJobParallelFor
             {
                 SetState(Cell.State.Alive, index);
             }
+            else
+            {
+                // This line is only necessary in Jobs as it causes cells to not die if not used
+                SetState(Cell.State.Dead, index);
+            }
         }
 
     }
@@ -42,11 +47,9 @@ public struct ProcessGenerationsJob : IJobParallelFor
         {
             case Cell.State.Dead:
                 rawTexture2D[index] = Color.black;
-               // texture2D.SetPixel(gridPos.x, gridPos.y, Color.black);
                 break;
             case Cell.State.Alive:
                 rawTexture2D[index] = Color.white;
-                //texture2D.SetPixel(gridPos.x, gridPos.y, _controller.cellColor);
                 break;
             default:
                 break;
