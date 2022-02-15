@@ -98,7 +98,7 @@ public class GameOfLifeUI : MonoBehaviour
 
     void UpdateGridInput()
     {
-        gridSize.text = gameOfLife.model.sizeX + "x" + gameOfLife.sizeY;
+        gridSize.text = gameOfLife.sizeX + "x" + gameOfLife.sizeY;
         gridSizeInput.text = gameOfLife.sizeY.ToString();
     }
 }
